@@ -1,0 +1,149 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>Before/After Slider</title>
+   <style>
+   
+     html, body {
+       margin: 0;
+       padding: 0;
+     }
+     .container {
+       width: 100%;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+     }
+     .slider-wrap {
+       position: relative;
+     }
+     .slider-wrap img {
+       display: block;
+       width: 1080px;
+       user-select: none;
+       /* 取消图片被选中 */
+     }
+     .slider-wrap .before-img {
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 50%;
+       overflow: hidden;
+     }
+     .slider-wrap .handler {
+       display: block;
+       width: 5px;
+       height: 100%;
+       background-color: rgba(0, 0, 0, .3);
+       position: absolute;
+       left: 50%;
+       top: 0;
+       transform: translateX(-50%);
+       cursor: ew-resize;
+     }
+     .slider-wrap .handler::after {
+       width: 64px;
+       height: 64px;
+       background-color: rgba(0, 0, 0, .5);
+       position: absolute;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%, -50%);
+ 
+       content: '\2b0c';
+       color: white;
+       font-size: 50px;
+       text-align: center;
+       line-height: 64px;
+       border-radius: 50%;
+       box-shadow: 0 2px 6px #000;
+       transition: all .3s ease;
+     }
+    .slider-wrap .handler:hover::after {
+      width: 40px;
+      height: 40px;
+      font-size: 30px;
+      line-height: 40px;
+    }
+    .slider-wrap .label-left {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 15pt;
+      z-index: 10;
+      font-weight: bold;
+    }
+    .slider-wrap .label-right {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: white;
+      font-size: 15pt;
+      z-index: 10;
+      font-weight: bold;
+    }
+  
+  </style>
+ </head>
+ <body>
+   <div class="container">
+     <h1>Before/After Slider @VincentTV</h1>
+ 
+    <div class="slider-wrap">
+      <div class="label-left">XX</div>
+      <div class="label-right">YY</div>
+      <div class="before-img">
+        <img src="static/images/vis_3dgs.png" alt="">
+      </div>
+       <img src="static/images/vis_ours.png" alt="">
+      <span class="handler"></span>
+    </div>
+ 
+   </div>
+ 
+   <script>
+ 
+    const slider = document.querySelector('.slider-wrap');   
+    const beforeImg = document.querySelector('.before-img');  
+    const handler = document.querySelector('.handler'); 
+    var marginX;    
+    var sliderWidth; 
+
+    window.onload = function() {
+      const img = slider.querySelector('img');
+      sliderWidth = img.offsetWidth;
+    }
+
+    handler.onmousedown = function(e) {
+      marginX = e.pageX - handler.offsetLeft;
+
+      if (!sliderWidth) {
+        const img = slider.querySelector('img');
+        sliderWidth = img.offsetWidth;
+      }
+      slider.addEventListener('mousemove', moveHandler);
+      document.addEventListener('mouseup', function mouseUpHandler() {
+        slider.removeEventListener('mousemove', moveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+      });
+    }
+
+    function moveHandler(e) {
+      let newLeft = e.pageX - marginX;
+
+      const minLeft = 0;
+      const maxLeft = sliderWidth;
+      
+      newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
+      
+      handler.style.left = newLeft + 'px';
+      beforeImg.style.width = newLeft + 'px';
+    }
+ 
+   </script>
+ </body>
+ </html>

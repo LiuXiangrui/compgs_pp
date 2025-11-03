@@ -32,6 +32,91 @@
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
   <link rel="icon" href="./static/images/favicon.svg">
+  
+  <!-- Before/After Slider Styles -->
+  <style>
+    .content .slider-wrap {
+      position: relative;
+      display: block;
+      margin: 20px auto;
+      width: 800px !important;
+      max-width: 800px !important;
+      min-width: 800px !important;
+    }
+    .content .slider-wrap img {
+      display: block !important;
+      width: 800px !important;
+      max-width: 800px !important;
+      min-width: 800px !important;
+      height: auto !important;
+      user-select: none;
+    }
+    .content .slider-wrap .before-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      overflow: hidden;
+    }
+    .content .slider-wrap .before-img img {
+      width: 800px !important;
+      max-width: 800px !important;
+      min-width: 800px !important;
+      height: auto !important;
+    }
+    .slider-wrap .handler {
+      display: block;
+      width: 5px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, .3);
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      cursor: ew-resize;
+    }
+    .slider-wrap .handler::after {
+      width: 64px;
+      height: 64px;
+      background-color: rgba(0, 0, 0, .5);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      content: '\2b0c';
+      color: white;
+      font-size: 50px;
+      text-align: center;
+      line-height: 64px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px #000;
+      transition: all .3s ease;
+    }
+    .slider-wrap .handler:hover::after {
+      width: 40px;
+      height: 40px;
+      font-size: 30px;
+      line-height: 40px;
+    }
+    .slider-wrap .label-left {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 15pt;
+      z-index: 10;
+      font-weight: bold;
+    }
+    .slider-wrap .label-right {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: white;
+      font-size: 15pt;
+      z-index: 10;
+      font-weight: bold;
+    }
+  </style>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
@@ -49,19 +134,19 @@
           <h1 class="title is-1 publication-title">CompGS++: Compressed Gaussian Splatting for Static and Dynamic Scene Representation</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a>Xiangrui Liu</a><sup>1</sup>,
+              Xiangrui Liu<sup>1</sup>,
             </span>
             <span class="author-block">
-              <a>Xinju Wu</a><sup>1</sup>,
+              Xinju Wu<sup>1</sup>,
             </span>
             <span class="author-block">
-              <a>Shiqi </a><sup>1</sup>,
+              Shiqi<sup>1</sup>,
             </span>
             <span class="author-block">
-              <a>Zhu Li</a><sup>2</sup>,
+              Zhu Li<sup>2</sup>,
             </span>
             <span class="author-block">
-              <a>Sam Kwong</a><sup>3</sup>
+              Sam Kwong<sup>3</sup>
             </span>
           </div>
 
@@ -106,18 +191,125 @@
   </div>
 </section>
 
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Compressed Gaussian Splatting for Static Scenes</h2>
+
+        <h3 class="title is-4">Methodology</h3>
+        <div class="content has-text-justified">
+          <p>
+            Our static scene methodology eliminates spatial redundancy via <b>Spatial Primitive Prediction</b>. We designed a hierarchical primitive structure that efficiently decomposes the scene into anchor primitives' and coupled primitives. Leveraging the inherent spatial correlations among 3D Gaussians, the attributes of coupled primitives can be efficiently predicted from neighboring anchor primitives. Therefore, the model only needs to encode compact prediction residuals.
+            <br>
+            <br>
+            Furthermore, we introduce <b>Rate-constrained Optimization</b>. This module utilizes an enhanced entropy model, combining hyperpriors and spatial priors, to jointly optimize reconstruction quality and encoding bitrate. This minimizes parameter redundancy within each primitive, ensuring maximum compactness while maintaining high quality.
+          </p>
+
+          <img src="./static/images/static.png" 
+          class="image is-centered"
+          style="display: block; margin: 0 auto; width: 90%; height: 15%;"/>
+        </div>
+        <br>
+
+        <h3 class="title is-4">Quantitative comparison</h3>
+        <div class="content has-text-justified">
+          <p>
+            As shown in the tables, CompGS++ significantly outperforms existing compression methods across all static scene benchmarks (Tanks & Temples, Deep Blending, Mip-NeRF 360).
+            <ul>
+              <li><b>Outperforming Prior Work:</b> Compared to our previous work, CompGS, on the Mip-NeRF 360 dataset, CompGS++ achieves a -44.0% BD-BR bitrate saving. In practical terms, this means CompGS++ can transmit 3D scene data of the same quality using nearly half the bandwidth, a significant improvement in data compression..</li>
+
+              <li><b>Surpassing State-of-the-Art:</b> Compared to the latest SOTA methods (e.g., Chen et al., Shin et al.), CompGS++ achieves comparable or even higher reconstruction quality (PSNR) while reducing the model size by 2-3 times, demonstrating superior rate-distortion performance.</li>
+            </ul>
+            <div class="columns">
+              <div class="column has-text-centered">
+                <img src="./static/images/t2t.png"
+                     style="max-width: 99%; height: auto;"
+                />
+              </div>
+              <div class="column has-text-centered">
+                <img src="./static/images/db.png"
+                     style="max-width: 100%; height: auto;"
+                />
+              </div>
+              <div class="column has-text-centered">
+                <img src="./static/images/mip.png"
+                     style="max-width: 100%; height: auto;"
+                />
+              </div>
+            </div>
+        </div>
+        <br>
+
+        <h3 class="title is-4"> Qualitative comparison</h3>
+        <div class="content has-text-justified">
+        </div>
+        The visual comparisons intuitively demonstrate our method's ability to maintain high visual fidelity even at extreme compression ratios.
+        <br>
+        <div class="content has-text-centered" style="overflow-x: auto; max-width: none; width: 100%;">
+          <div class="slider-wrap">
+            <div class="label-left">3DGS<br> (31.44dB@366.62MB)</div>
+            <div class="label-right">Ours <br> (31.75dB@5.91MB)</div>
+            <div class="before-img">
+              <img src="./static/images/vis_3dgs.png" alt="3DGS">
+            </div>
+            <img src="./static/images/vis_ours.png" alt="Ours">
+            <span class="handler"></span>
+          </div>
+        </div>
+        </div>
+        
+
+    </div>
+
+  </div>
+</section>
+
 
 <section class="section">
   <div class="container is-max-desktop">
-
-    <div class="columns is-centered">
-    <!-- Animation. -->
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Animation</h2>
+        <h2 class="title is-3">Compressed Gaussian Splatting for Dynamic Scenes</h2>
 
-        <!-- Interpolating. -->
-        <h3 class="title is-4">Interpolating states</h3>
+        <h3 class="title is-4">Methodology</h3>
+        <div class="content has-text-justified">
+          <p>
+            Our dynamic scene methodology is built on an efficient Streamable Paradigm, which models the video sequence as an I-scene (keyframe) and subsequent P-scenes (predicted frames). At its core is the <b>Temporal Primitive Prediction module</b>, which leverages information from the previous I/P-scene to efficiently construct the current P-scene, drastically reducing temporal redundancy. This process begins by disentangling the inherited primitives into two sets:
+            <ul>
+            <li>Static Primitives: For static parts of the scene (e.g., the background), the model only predicts and applies appearance compensation.</li>
+            
+            <li>Dynamic Primitives: For moving objects, the model performs full geometric and appearance deformation.</li>
+            </ul>
+            This disentanglement ensures that motion is only applied where necessary, drastically reducing temporal redundancy and preventing artifacts.
+            <br/>
+            <br/>
+            Furthermore, the <b>Temporal Adaptive Control module</b> allows primitives to intelligently convert between static and dynamic states based on rendering errors, enabling the precise modeling of complex dynamic effects (such as moving cast shadows).
+          </p>
+
+          <img src="./static/images/dynamic.png" 
+          class="image is-centered"
+          style="display: block; margin: 0 auto; width: 90%; height: 15%;"/>
+        </div>
+        <br>
+
+
+        <h3 class="title is-4">Quantitative comparison</h3>
+        <div class="content has-text-justified">
+          <p>
+            CompGS++ achieves state-of-the-art performance in streamable dynamic scene modeling.
+            <ul>
+              <li><b>vs. Streamable Methods:</b> As shown in the tables, on the Neural 3D Video and Meet Room datasets, CompGS++ achieves an average PSNR improvement of 1-2 dB and a 10x to 100x reduction in Per Frame size compared to existing streamable methods (e.g., HiCom, 3DGStream).</li>
+
+              <li><b>vs. Non-Streamable Methods:</b> More importantly, the reconstruction quality achieved by our streamable method (which is limited by causal constraints and cannot see future frames) is on par with non-streamable SOTA methods (e.g., Lee et al.) that process the entire sequence at once. This demonstrates the efficiency and advancement of our model.</li>
+            </ul>
+            <img src="./static/images/n3dv.png" 
+              class="image is-centered"
+              style="display: block; margin: 0 auto; width: 50%; height: 15%;"/>
+        </div>
+        <br>
+
+        <!-- <h3 class="title is-4">Interpolating states</h3>
         <div class="content has-text-justified">
           <p>
             We can also animate the scene by interpolating the deformation latent codes of two input
@@ -147,11 +339,11 @@
             <p class="is-bold">End Frame</p>
           </div>
         </div>
-        <br/>
-        <!--/ Interpolating. -->
+        <br/> -->
+
 
  
-        <h3 class="title is-4"> Dynamic scene reconstruction</h3>
+        <h3 class="title is-4"> Qualitative comparison</h3>
         <div class="content has-text-justified">
           <p>
             Below, we provide a qualitative comparison of dynamic view synthesis on the Neural 3D Video dataset. These videos contrast our CompGS++ with state-of-the-art streamable methods demonstrating the temporal consistency of each.
@@ -169,7 +361,7 @@
                  muted
                  preload
                  playsinline
-                 width="75%">
+                 width="100%">
             <source src="./static/videos/coffee_martini.mp4"
                     type="video/mp4">
           </video>
@@ -180,7 +372,7 @@
                  muted
                  preload
                  playsinline
-                 width="75%">
+                 width="100%">
             <source src="./static/videos/falme_salmon.mp4"
                     type="video/mp4">
           </video>
@@ -191,14 +383,13 @@
                  muted
                  preload
                  playsinline
-                 width="75%">
+                 width="100%">
             <source src="./static/videos/flame_steak.mp4"
                     type="video/mp4">
           </video>
         </div>
         
 
-      </div>
     </div>
 
   </div>
@@ -240,6 +431,55 @@
     </div>
   </div>
 </footer>
+
+<!-- Before/After Slider Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.querySelector('.slider-wrap');
+    if (!slider) return;
+    
+    const beforeImg = slider.querySelector('.before-img');
+    const handler = slider.querySelector('.handler');
+    var marginX;
+    var sliderWidth;
+
+    // 获取图片宽度作为边界
+    window.addEventListener('load', function() {
+      const img = slider.querySelector('img:not(.before-img img)');
+      if (img) {
+        sliderWidth = img.offsetWidth;
+      }
+    });
+
+    handler.addEventListener('mousedown', function(e) {
+      marginX = e.pageX - handler.offsetLeft;
+
+      if (!sliderWidth) {
+        const img = slider.querySelector('img:not(.before-img img)');
+        if (img) {
+          sliderWidth = img.offsetWidth;
+        }
+      }
+      slider.addEventListener('mousemove', moveHandler);
+      document.addEventListener('mouseup', function mouseUpHandler() {
+        slider.removeEventListener('mousemove', moveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+      });
+    });
+
+    function moveHandler(e) {
+      let newLeft = e.pageX - marginX;
+
+      const minLeft = 0;
+      const maxLeft = sliderWidth;
+
+      newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
+
+      handler.style.left = newLeft + 'px';
+      beforeImg.style.width = newLeft + 'px';
+    }
+  });
+</script>
 
 </body>
 </html>
